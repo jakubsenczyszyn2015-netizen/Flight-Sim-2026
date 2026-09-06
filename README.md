@@ -1,4 +1,6 @@
-# AERODYNE — Flight Simulator
+# Flight Simulator 2026
+
+*Jakub's Stuffs*
 
 A 3D flight simulator in **one HTML file**. Three.js is the only external
 dependency (loaded from a CDN, with two fallbacks); everything else — terrain,
@@ -83,14 +85,25 @@ beam, because it is computed from your position every frame.
   gear, electrical loss takes the autopilot and the glass instruments.
 - **Bird strikes** — flocks below 10 000 ft, visible before they hit. What gets
   struck matters, and damage scales with closing speed.
-- **Crash analysis** — terrain impact, structural overspeed, over-G, gear
-  collapse, gear-up landing, wing strike and runway excursion are told apart,
-  and the report explains the cause with the numbers behind it. Land properly
-  and you get scored instead.
+- **Damage and crashes** — damage is tracked per component: each wing, the tail,
+  the fuselage and each gear leg. It is not a switch between "fine" and
+  "destroyed". Drag a wingtip on landing and that wing is wrecked, not the
+  aeroplane: you lose most of the aileron on that side and gain a standing roll
+  and yaw toward the damaged wing that you then have to hold off. Arrive hard
+  enough and the legs fold and you slide; land gear-up and you scrape to a stop.
+  Only a genuinely unsurvivable arrival — a steep, fast impact — writes the
+  aircraft off outright, and the report then names what actually failed, with
+  the numbers behind it. Land properly and you get scored instead.
 
 ## Controls
 
-Mouse flies the yoke. Click the canvas to capture the pointer.
+Mouse flies the yoke — click the canvas to capture the pointer. The axis is
+shaped before it reaches the aircraft: a dead zone around neutral so it sits
+still when you are not asking for anything, an expo curve so small corrections
+are gentle while full deflection still reaches the stops, and a light filter to
+keep mouse jitter out of the controls. All three are adjustable in Settings,
+along with **Pitch direction** — *Yoke* (draw the mouse back to raise the nose,
+like a control column) or *Camera* (the nose follows the cursor).
 
 | | |
 |---|---|
@@ -104,6 +117,7 @@ Mouse flies the yoke. Click the canvas to capture the pointer.
 | `Tab` · `K` · `O` | Autopilot · autothrottle · vertical mode |
 | `[` `]` · `-` `=` | Heading select · altitude select |
 | `N` · `I` | Cycle nav target · arm ILS approach |
+| `Backspace` | Centre the yoke |
 | `H` · `Esc` | Controls reference · pause |
 
 Press `H` in flight for the full list.
@@ -115,6 +129,23 @@ render scale if the frame rate stays low. The **volumetric clouds are by far the
 most expensive thing here** — a full-screen ray-march — so they are the first
 thing to turn off in Settings if you need frames. Shadow cascades and render
 scale are next.
+
+## Aircraft models
+
+Everything is generated from parameters. Fuselages are lofted through stations
+with independent half-width and half-height, so a body can be circular at the
+cabin, flattened under the wing box and swept up at the tail. Lifting surfaces
+come from a cambered NACA section with real sweep, taper, dihedral and washout,
+and **every control surface is an actual slice cut from that same wing**, hinged
+on its own swept hinge line rather than a slab laid on top — so the ailerons,
+flaps, slats, spoilers, elevators and rudder all move as part of the structure.
+
+The airliners carry a wing-body fairing, flap-track fairings, a dorsal fin
+fillet, sharklets, an APU exhaust, and turbofans built from an inlet lip, fan
+cowl, reverser cowl, core and exhaust plug with a spinning fan that blurs out as
+N1 comes up. The Cessna gets a wrapped greenhouse, V lift struts with jury
+struts, spring-steel main legs, wheel spats and a twisted tapering propeller.
+An airliner is about 15 800 triangles, the Cessna about 7 000.
 
 ## A note on the textures
 
